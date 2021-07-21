@@ -10,8 +10,8 @@
     "files": [
         "README.md",
         "main.ts",
-        "_locales/zh/Coolguy_basic_extension-strings.json",
-        "_locales/zh/Coolguy_basic_extension-jsdoc-strings.json"
+        "_locales/Coolguy_basic_extension-strings.json",
+        "_locales/Coolguy_basic_extension-jsdoc-strings.json"
     ],
     "testFiles": [
         "test.ts"

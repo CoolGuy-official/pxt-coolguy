@@ -9,6 +9,8 @@
     },
     "files": [
         "README.md",
+        "buttons.ts",
+        "buttons.cpp",		
         "main.ts",
         "_locales/zh/Coolguy_basic_extension-strings.json",
         "_locales/zh/Coolguy_basic_extension-jsdoc-strings.json"

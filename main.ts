@@ -1107,8 +1107,7 @@ namespace Coolguy_basic {
 
         switch (exterpin) {
             case motor_ports.J7:
-                //uBit.buttonA.disable();
-                //uBit.buttonB.disable();
+                input.disableButtons();
                 motor_pin1 = AnalogPin.P5;
                 motor_pin2 = AnalogPin.P11;
                 break;

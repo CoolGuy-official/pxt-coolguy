@@ -69,6 +69,9 @@
   // camera module test
   Coolguy_advan.VisionSensor_Begin(exter_ports2.J5, VisionSensor_Mode.CARD)
   basic.showIcon(IconNames.Heart)
-  Coolguy_advan.VisionSensor_Detected1(VisionDetect_Others.FACE)) 
+  Coolguy_advan.VisionSensor_Detected1(VisionDetect_Others.FACE)
   basic.pause(1000)
-
+  
+  // test GPIO 5 and 10 as output
+  input.disableButtons()
+  input.enableButtons()

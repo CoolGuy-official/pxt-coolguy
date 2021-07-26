@@ -1108,8 +1108,8 @@ namespace Coolguy_basic {
         switch (exterpin) {
             case motor_ports.J7:
                 input.disableButtons();
-				setDigitalPin(5, 1);
-				setDigitalPin(11, 1);
+//				setDigitalPin(5, 1);
+//				setDigitalPin(11, 1);
                 motor_pin1 = AnalogPin.P5;
                 motor_pin2 = AnalogPin.P11;
                 break;

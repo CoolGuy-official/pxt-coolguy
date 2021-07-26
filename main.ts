@@ -1124,6 +1124,8 @@ namespace Coolguy_basic {
 				input.disableButtons();
                 setDigitalPin(5, 0);
                 setDigitalPin(11, 1);
+				pins.digitalWritePin(5 + DigitalPin.P0, 0);
+				pins.digitalWritePin(11 + DigitalPin.P0, 1);
 //                pins.analogWritePin(motor_pin1, 0);
 //                pins.analogWritePin(motor_pin2, speed*4);
 //                pins.analogSetPeriod(motor_pin2, 20000);
@@ -1131,7 +1133,9 @@ namespace Coolguy_basic {
             case motor_dir.REV:
 				input.disableButtons();
                 setDigitalPin(5, 1);
-                setDigitalPin(11, 0);			
+                setDigitalPin(11, 0);	
+				pins.digitalWritePin(5 + DigitalPin.P0, 1);
+				pins.digitalWritePin(11 + DigitalPin.P0, 0);				
 //                pins.analogWritePin(motor_pin2, 0);
 //                pins.analogWritePin(motor_pin1, speed*4);
 //                pins.analogSetPeriod(motor_pin1, 20000);

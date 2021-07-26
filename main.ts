@@ -1096,7 +1096,7 @@ namespace Coolguy_basic {
      * @param speed the speed of motor and range from 0 to 255, eg: 255
      */
     //% blockId=coolguy_extermotor_drive
-    //% block="Set motor %exterpin|speed %speed| as %dir|" 
+    //% block="Set Motor %exterpin|speed %speed| as %dir|" 
     //% speed.min=0 speed.max=255
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"

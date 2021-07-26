@@ -1121,14 +1121,18 @@ namespace Coolguy_basic {
 
         switch (dir) {
             case motor_dir.FWD:
-                pins.analogWritePin(motor_pin1, 0);
-                pins.analogWritePin(motor_pin2, speed*4);
-                pins.analogSetPeriod(motor_pin2, 20000);
+                setDigitalPin(5, 0);
+                setDigitalPin(11, 1);
+//                pins.analogWritePin(motor_pin1, 0);
+//                pins.analogWritePin(motor_pin2, speed*4);
+//                pins.analogSetPeriod(motor_pin2, 20000);
                 break;
             case motor_dir.REV:
-                pins.analogWritePin(motor_pin2, 0);
-                pins.analogWritePin(motor_pin1, speed*4);
-                pins.analogSetPeriod(motor_pin1, 20000);
+                setDigitalPin(5, 1);
+                setDigitalPin(11, 0);			
+//                pins.analogWritePin(motor_pin2, 0);
+//                pins.analogWritePin(motor_pin1, speed*4);
+//                pins.analogSetPeriod(motor_pin1, 20000);
                 break;
             default: break;
         }

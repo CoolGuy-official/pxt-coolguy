@@ -2,6 +2,7 @@
     "name": "Coolguy_basic_extension",
     "version": "0.1.1",
     "description": "Coolguy basic extension",
+    "license": "MIT",
     "dependencies": {
         "core": "*",
         "neopixel": "github:Microsoft/pxt-neopixel",
@@ -18,6 +19,5 @@
     "testFiles": [
         "test.ts"
     ],
-    "public": false,
-    "license": "MIT"
+    "public": true
 }

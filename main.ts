@@ -74,7 +74,7 @@ enum CmpStr_dir {
 /**
  * Coolguy basic extension
  */
-//% weight=100 color=#ffc500 icon="\uf17b"
+//% weight=100 color=#ffc500 icon="\u272a"
 //% groups=['CmpStr', WalkLine', 'NixieTube', 'IRremote', 'UltrasoundWave', 'Motors', 'RGB', others']
 namespace Coolguy_basic {
     //----------------------字符串比较---------------------------------

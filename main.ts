@@ -726,7 +726,7 @@ namespace Coolguy_basic {
             for (k = 0; k < 8; k++) {       //每组数据8位
                 N = 0;
                 while (!pins.digitalReadPin(IR_INpin)) {
-                    control.waitMicros(10);
+                    //control.waitMicros(10);
                     if (++N >= 100) {
                         return;
                     }

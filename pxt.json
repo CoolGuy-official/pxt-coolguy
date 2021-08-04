@@ -4,17 +4,22 @@
     "description": "Coolguy basic extension",
     "license": "MIT",
     "dependencies": {
-        "core": "*",
-        "neopixel": "github:Microsoft/pxt-neopixel",
-        "Coolguy_advan_extension": "github:CoolGuy-official/Microbit-advan#v0.2.2"
+        "core": "file:pxt_modules/core",
+        "microphone": "file:pxt_modules/microphone"
     },
     "files": [
         "README.md",
         "buttons.ts",
-        "buttons.cpp",		
+        "buttons.cpp",
         "main.ts",
+        "advan.ts",
+        "neopixel.ts",
+        "sendBuffer.asm",
         "_locales/zh/Coolguy_basic_extension-strings.json",
-        "_locales/zh/Coolguy_basic_extension-jsdoc-strings.json"
+        "_locales/zh/Coolguy_basic_extension-jsdoc-strings.json",
+        "_locales/zh/Coolguy_advan_extension-strings.json",
+        "_locales/zh/Coolguy_advan_extension-jsdoc-strings.json",
+        "_locales/zh/neopixel-strings.json"
     ],
     "testFiles": [
         "test.ts"

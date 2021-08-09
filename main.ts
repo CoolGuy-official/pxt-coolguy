@@ -677,6 +677,7 @@ namespace Coolguy_basic {
     let IRCode = 0;
     let Remote_Type = 0;
     let IR_INpin = DigitalPin.P0;
+    let timeo = 100;
 
     function IR_Remote_Task() {
         let N: number = 0;
@@ -684,18 +685,18 @@ namespace Coolguy_basic {
         while (!pins.digitalReadPin(IR_INpin))            //等IR变为高电平，跳过9ms的前导低电平信号
         {
             //control.waitMicros(10);
-            if (++N >= 1000) {
+            if (++N >= 10*timeo) {
                 return;
             }
         }
 
-        if (N > 250 && (Remote_Type == 0 || Remote_Type == 1)) //新的NEC遥控   引导信号N大概375-380
+        if (N > 2.5*timeo && (Remote_Type == 0 || Remote_Type == 1)) //新的NEC遥控   引导信号N大概375-380
         {
-            NECIR_Scan();     //新遥控器
+            basic.showString(NECIR_Scan());     //新遥控器
         }
-        else if (N > 110 && (Remote_Type == 0 || Remote_Type == 2))  //旧的遥控  引导信号N大概120-125
+        else if (N > 1.1*timeo && (Remote_Type == 0 || Remote_Type == 2))  //旧的遥控  引导信号N大概120-125
         {
-            IR_Scan();  //旧遥控器
+            basic.showString(IR_Scan());  //旧遥控器
         }
 
         IRCode = IRData[1];
@@ -708,46 +709,53 @@ namespace Coolguy_basic {
         let j: number, k: number;
         let N = 0;
         let IRCOM = [0, 0, 0, 0];
-
+        basic.showString("NEW");
         N = 0;
         while (pins.digitalReadPin(IR_INpin))           //等待IR 变为低电平，跳过4.5ms的前导高电平信号
         {
             //control.waitMicros(10);
-            if (++N >= 500) {
-                return;
+            if (++N >= 5*timeo) {
+                return "g";
             }
         }
-        if (N < 160)     //判断是不是4.5ms引导码
+        if (N < 1.6*timeo)     //判断是不是4.5ms引导码
         {
-            return;
+            return "g1";
         }
 
+        let ht:int16 [] =[ 0, 0, 0, 0, 0, 0, 0, 0 ];
         for (j = 0; j < 4; j++) {        //收集四组数据
             for (k = 0; k < 8; k++) {       //每组数据8位
                 N = 0;
                 while (!pins.digitalReadPin(IR_INpin)) {
-                    //control.waitMicros(10);
-                    if (++N >= 100) {
-                        return;
+                    control.waitMicros(10);
+                    if (++N >= timeo) {
+                        return "l";
                     }
                 }
                 N = 0;
                 while (pins.digitalReadPin(IR_INpin)) {
                     //control.waitMicros(10);
-                    if (++N >= 200) {
-                        return;
+                    if (++N >= 2*timeo) {
+                        return "h";
                     }
                 }
                 IRCOM[j] = IRCOM[j] >> 1;
-                if (N >= 40) {
+                if ((ht[j]=N) >= 0.4*timeo) {
                     IRCOM[j] = IRCOM[j] | 0x80;  //数据最高位补1
                 }
             }//end for k
         }//end for j
 
+        for (let i = 0; i < 8; i++){
+            basic.showNumber(ht[i]);
+            basic.showString("|");
+        }
+        return "c";
+
         if (IRCOM[2] + IRCOM[3] !== 255)   //判断两个数是不是取反关系
         {
-            return;
+            return "f";
         }
 
         if (IRCOM[2] > 1) {
@@ -798,12 +806,12 @@ namespace Coolguy_basic {
         let N = 0;
         let IRCOM = [0, 0];
         let buf = [0, 0, 0, 0, 0, 0, 0, 0];
-
+        basic.showString("OLD");
         N = 0;
         while (pins.digitalReadPin(IR_INpin)) {
             //control.waitMicros(10);
-            if (++N >= 100)
-                return;
+            if (++N >= timeo)
+                return "g";
         }
         for (j = 0; j < 2; j++)         //收集2组数据
         {
@@ -812,25 +820,33 @@ namespace Coolguy_basic {
                 N = 0;
                 while (!pins.digitalReadPin(IR_INpin))          //等待 IR 变为高电电平
                 {
-                    if (++N >= 100) {
-                        return;
+                    if (++N >= timeo) {
+                        return "L";
                     }
                 }
                 N = 0;
                 while (pins.digitalReadPin(IR_INpin))           //计算IR高电平时间
                 {
-                    if (++N >= 100)
-                        return;              //0.14ms计数过长自动离开
+                    if (++N >= timeo)
+                        return "H";              //0.14ms计数过长自动离开
                 }
                 IRCOM[j] = IRCOM[j] >> 1;
                 buf[k] = N;
-                if (N >= 16) {
+                if (N >= 0.16*timeo) {
                     IRCOM[j] = IRCOM[j] | 0x80; //数据最高位补1
                 }
             }//end for k
         }//end for j
+
+
+        for (let i = 0; i < 8; i++){
+            basic.showNumber(buf[i]);
+            basic.showString("|");
+        }
+        return "C";
+
         if (IRCOM[0] + IRCOM[1] !== 255)
-            return;
+            return "F";
 
         if ((IRCOM[0] & 0x0f) == 0x0f) {
             if (((IRCOM[0] >> 4) & 0xf) == IR_ID) {
@@ -895,12 +911,30 @@ namespace Coolguy_basic {
     //% blockId=coolguy_IR_Check
     //% block="IR receive"
     //% group=IRremote
+    let IRflag = 0;
     export function coolguy_IR_check() {
-        while (1) {
-            if (!pins.digitalReadPin(IR_INpin)) {
-                IR_Remote_Task();
-            }
+        IRflag = 1;
+        control.inBackground(function () { while (IRflag) { IR_Remote_Task() } });
+    }
+
+    export function coolguy_IR_result(){
+        return IRCode;
+    }
+
+    export function coolguy_IR_timebase(input:boolean){
+        if (input)
+        {
+            timeo+=10;
         }
+        return timeo;
+    }
+
+    export function coolguy_IR_timebased(input:boolean){
+        if (input)
+        {
+            timeo-=10
+        }
+        return timeo;    
     }
 
     /**
@@ -919,12 +953,13 @@ namespace Coolguy_basic {
             if (key === 0) return 1;
         }
         else {
-            if (key === IRCode && ((channel - 1) === IRData[0] || Remote_Type === 1)) {
+            if (key === IRCode && ((channel - 1) === IRData[0])) {
                 return 1;
             }
         }
         return 0;
     }
+    
     //---------------------UltrasoundWave读取函数--------------------------------------
     let ultrasonic_tri = DigitalPin.P15;
     let ultrasonic_ech = DigitalPin.P16;

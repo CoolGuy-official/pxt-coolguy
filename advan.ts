@@ -21,62 +21,63 @@ enum exter_ports3 {
 }
 
 enum SoundSensor_Mode {
-    //% block=MODE_ASR
+    //% block=语音识别
     MODE_ASR = 1,
-    //% block=MODE_TTS
+    //% block=语音合成
     MODE_TTS = 2,
-    //% block=MODE_WORD
+    //% block=文字对话
     MODE_WORD = 4,
-    //% block=MODE_DIA
+    //% block=语音对话
     MODE_DIA = 8
 }
 
 enum VisionSensor_Mode {
-    //% block=CARD
+    //% block=卡片检测
     CARD = 7,
-    //% block=FACERCG
+    //% block=特定人脸检测
     FACERCG = 6,
-    //% block=MOVINGOBJECT
+    //% block=移动物体检测
     MOVINGOBJECT = 5,
-    //% block=FACE
+    //% block=人脸检测
     FACE = 4,
-    //% block=BODY
+    //% block=人体检测
     BODY = 3,
-    //% block=LINE
+    //% block=线条检测
     LINE = 2,
-    //% block=BALL
+    //% block=球体检测
     BALL = 1
 }
 
 enum VisionDetect_Card {
-    //% block=Card_Squar
+    //% block=正方形卡
     Card_Squar = 3,
-    //% block=Card_Trian
+    //% block=三角形卡
     Card_Trian = 2,
-    //% block=Card_Round
+    //% block=圆形卡
     Card_Round = 1
 }
 
 enum VisionDetect_Others {
-    //% block=FACERCG
+    //% block=特定人脸
     FACERCG = 6,
-    //% block=MOVINGOBJECT
+    //% block=移动物体
     MOVINGOBJECT = 5,
-    //% block=FACE
+    //% block=人脸
     FACE = 4,
-    //% block=BODY
+    //% block=人体
     BODY = 3,
-    //% block=LINE
+    //% block=线条
     LINE = 2,
-    //% block=BALL
+    //% block=球体
     BALL = 1
 }
 
 /**
- * Coolguy advanced extension
+ * 酷哥进阶
  */
 //% weight=100 color=#ffc500 icon="\uf17b"
-//% groups=['wtr50_1', 'SoundSensor', 'VisionSensor', 'WIFI']
+//% groups=['多路语音模块', '人工智能模块', '摄像头模块', 'WIFI模块']
+//% block=酷哥进阶
 namespace Coolguy_advan {
 
     //---------------------人脸识别----------------------------------
@@ -128,11 +129,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Camera init
+     * 摄像头初始化
      */
     //% blockId=VisionSensor_begin
-    //% block="Set camera at %exterpin|as %Y|"
-    //% group=VisionSensor
+    //% block="设置%exterpin|摄像头检测类型为%Y|识别"
+    //% group=摄像头模块
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
     export function VisionSensor_Begin(exterpin: exter_ports2, Y: VisionSensor_Mode) {
@@ -191,11 +192,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Camera detected(Card)
+     * 摄像头检测(卡片)
      */
     //% blockId=VisionSensor_Detected
-    //% block="Camera detected %x|"
-    //% group=VisionSensor
+    //% block="摄像头检测到%x|"
+    //% group=摄像头模块
     export function VisionSensor_Detected(x: VisionDetect_Card): boolean {
         VisionSensor_Search();
 
@@ -206,11 +207,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Camera detected
+     * 摄像头检测
      */
     //% blockId=VisionSensor_Detected1
-    //% block="Camera detected %x|"
-    //% group=VisionSensor
+    //% block="摄像头检测到%x|"
+    //% group=摄像头模块
     export function VisionSensor_Detected1(x: VisionDetect_Others): boolean {
         VisionSensor_Search();
         switch (x) {
@@ -291,11 +292,11 @@ namespace Coolguy_advan {
     let WIFI_Rx: SerialPin;
 
     /**
-     * WIFI init
+     * WIFI 初始化
      */
     //% blockId=coolguy_iCloudMemory_Serial_Init
-    //% block="WIFI init at %exterpin|"
-    //% group=WIFI
+    //% block="WIFI模块初始化%exterpin|"
+    //% group=WIFI模块
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
     export function iCloudMemory_Serial_Init(exterpin: exter_ports2) {
@@ -317,13 +318,13 @@ namespace Coolguy_advan {
     }
 
     /**
-    * WIFI setting
-    * @param SSID ID, eg: "CoolGuyRobot"
-    * @param PASSWORD Key, eg: robotrobot
+    * WIFI 设置
+    * @param SSID 账号, 例如: "CoolGuyRobot"
+    * @param PASSWORD 密码, 例如: robotrobot
     */
     //% blockId=coolguy_iCloudMemory_WiFi_SSIDPWD_Config
-    //% block="Set WIFI account %SSID| and password %PASSWORD|"
-    //% group=WIFI
+    //% block="设置WIFI帐号%SSID|密码%PASSWORD|"
+    //% group=WIFI模块
     export function iCloudMemory_WiFi_SSIDPWD_Config(SSID: string, PASSWORD: string) {
         let Rcv = "";
         let buf = control.createBuffer(1);
@@ -353,14 +354,14 @@ namespace Coolguy_advan {
     }
 
     /**
-     * WIFI read strings
-     * @param MACaddr the adress of MAC, eg: "2C3AE81ED2C1"
-     * @param addr the adress of iCloud, eg: 1
+     * WIFI模块读取字符串
+     * @param MACaddr WIFI地址, 例如: "2C3AE81ED2C1"
+     * @param addr 云地址, 例如: 1
      */
     //% blockId=coolguy_iCloudMemory_iCloud_Read_String
-    //% block="WIFI read strings from MAC %MACaddr| and cloud %addr|"
+    //% block="从WIFI地址%MACaddr|和云地址%addr|读取字符串"
     //% addr.min=1
-    //% group=WIFI
+    //% group=WIFI模块
     export function iCloudMemory_iCloud_Read_String(MACaddr: string, addr: number): string {
         let rev = "";
         let revtmp = "";
@@ -415,14 +416,14 @@ namespace Coolguy_advan {
     }
 
     /**
-     * WIFI read number
-     * @param MACaddr the adress of MAC, eg: "2C3AE81ED2C1"
-     * @param addr the adress of iCloud, eg: 1
+     * WIFI模块读取数字
+     * @param MACaddr WIFI地址, 例如: "2C3AE81ED2C1"
+     * @param addr 云地址, 例如: 1
      */
     //% blockId=coolguy_iCloudMemory_iCloud_Read_Float
-    //% block="WIFI read number from MAC %MACaddr| and cloud %addr|"
+    //% block="从WIFI地址%MACaddr|和云地址%addr|读取数字"
     //% addr.min=1
-    //% group=WIFI
+    //% group=WIFI模块
     export function iCloudMemory_iCloud_Read_Float(MACaddr: string, addr: number): number {
         let rev = "";
         let revtmp = "";
@@ -475,13 +476,13 @@ namespace Coolguy_advan {
     }
 
     /**
-     * WIFI send strings
-     * @param addr the adress of iCloud, eg: 1
+     * WIFI模块写字符串到云端
+     * @param addr 云地址, 例如: 1
      */
     //% blockId=coolguy_iCloudMemory_iCloud_Write_String
-    //% block="WIFI send strings %data| to cloud %addr|"
+    //% block="写字符串%data|存到云地址%addr|"
     //% addr.min=1
-    //% group=WIFI
+    //% group=WIFI模块
     export function iCloudMemory_iCloud_Write_str(data: string, addr: number) {
         if (addr > 0 && addr < 21) {
             while (serial.readString() != "");
@@ -493,13 +494,13 @@ namespace Coolguy_advan {
     }
 
     /**
-     * WIFI send number 
-     * @param addr the adress of iCloud, eg: 1
+     * WIFI模块写数字到云端
+     * @param addr 云地址, 例如: 1
      */
     //% blockId=coolguy_iCloudMemory_iCloud_Write_Number
-    //% block="WIFI send number %data| to cloud %addr|"
+    //% block="写数字%data|存到云地址%addr|"
     //% addr.min=1
-    //% group=WIFI
+    //% group=WIFI模块
     export function iCloudMemory_iCloud_Write_num(data: number, addr: number) {
         if (addr > 0 && addr < 21) {
             while (serial.readString() != "");
@@ -511,13 +512,13 @@ namespace Coolguy_advan {
     }
 
     /**
-     * WIFI send strings to common cloud
-     * @param addr the adress of iCloud, eg: 1
+     * WIFI模块写字符串到公共云地址
+     * @param addr 云地址, 例如: 1
      */
     //% blockId=coolguy_iCloudMemory_iCloudShare_Write_String
-    //% block="WIFI send strings %data| to common cloud %addr|"
+    //% block="写字符串%data|存到公共云地址%addr|"
     //% addr.min=1
-    //% group=WIFI
+    //% group=WIFI模块
     export function iCloudMemory_iCloudShare_Write_str(data: string, addr: number) {
         while (serial.readString() != "");
         serial.writeString("&S");
@@ -529,13 +530,13 @@ namespace Coolguy_advan {
     }
 
     /**
-     * WIFI send number to common cloud
-     * @param addr the adress of iCloud, eg: 1
+     * WIFI模块写数字到公共云地址
+     * @param addr 云地址, 例如: 1
      */
     //% blockId=coolguy_iCloudMemory_iCloudShare_Write_Number
-    //% block="WIFI send number %data| to common cloud %addr|"
+    //% block="写数字%data|存到公共云地址%addr|"
     //% addr.min=1
-    //% group=WIFI
+    //% group=WIFI模块
     export function iCloudMemory_iCloudShare_Write_num(data: number, addr: number) {
         while (serial.readString() != "");
         serial.writeString("&S");
@@ -547,25 +548,25 @@ namespace Coolguy_advan {
     }
 
     /**
-     * WIFI read strings from common cloud
-     * @param addr the adress of iCloud, eg: 1
+     * WIFI模块从公共云地址读取字符串
+     * @param addr 云地址, 例如: 1
      */
     //% blockId=coolguy_iCloudMemory_iCloudCommon_Read_String
-    //% block="WIFI read strings from common cloud %addr|"
+    //% block="从公共云地址%addr|读取字符串"
     //% addr.min=1
-    //% group=WIFI
+    //% group=WIFI模块
     export function iCloudMemory_iCloudCommon_Read_Str(addr: number): string {
         return iCloudMemory_iCloud_Read_String("000000000000", addr);
     }
 
     /**
-     * WIFI read number from common cloud
-     * @param addr the adress of iCloud, eg: 1
+     * 从公共云地址%addr|读取数字
+     * @param addr 云地址, 例如: 1
      */
     //% blockId=coolguy_iCloudMemory_iCloudCommon_Read_Number
-    //% block="WIFI read number from common cloud %addr|"
+    //% block="从公共云地址%addr|读取字符串"
     //% addr.min=1
-    //% group=WIFI
+    //% group=WIFI模块
     export function iCloudMemory_iCloudCommon_Read_Num(addr: number): number {
         return iCloudMemory_iCloud_Read_Float("000000000000", addr);
     }
@@ -593,11 +594,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * port setting
+     * 模块端口选择
      */
     //% blockId=SoundSensor_SetPort
-    //% block="Set port at %exterpin|"
-    //% group=SoundSensor
+    //% block="设置人工智能语音模块端口%exterpin|"
+    //% group=人工智能模块
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
     export function SoundSensor_SetPort(exterpin: exter_ports2) {
@@ -616,11 +617,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * SoundSenor init
+     * 模块初始化
      */
     //% blockId=SoundSensor_WaitInit
-    //% block="wait init finished"
-    //% group=SoundSensor
+    //% block="等待模块正常工作"
+    //% group=人工智能模块
     export function SoundSensor_WaitInit(): void {
         let Rcv = "";
 
@@ -640,11 +641,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Start sound record
+     * 模块采集语音
      */
     //% blockId=SoundSensor_Start_conversation
-    //% block="Start sound recording"
-    //% group=SoundSensor
+    //% block="开始采集语音"
+    //% group=人工智能模块
     export function SoundSensor_Start_conversation(): void {
         if (i == 0)//为了按键一直按下，只发一次数据，而不是一直发送数据。
         {
@@ -660,11 +661,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Stop sound recording
+     * 模块停止采集语音
      */
     //% blockId=SoundSensor_End_conversation
-    //% block="Stop sound recording"
-    //% group=SoundSensor
+    //% block="停止采集语音"
+    //% group=人工智能模块
     export function SoundSensor_End_conversation(): void {
         if (i == 1) {
             i = 0;
@@ -679,11 +680,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Press the button to speak
+     * 按键对话
      */
     //% blockId=SoundSensor_Vocice_conversation
-    //% block="Press the button to speak %num|"
-    //% group=SoundSensor
+    //% block="按键语音对话%num|"
+    //% group=人工智能模块
     export function SoundSensor_Vocice_conversation(num: number) {
         if (j == 0 && num == 1)//为了按键一直按下，只发一次数据，而不是一直发送数据。
         {
@@ -709,13 +710,13 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Account and Password setting
-     * @param SSID ID, eg: "CoolGuyRobot"
-     * @param PASSWORD Key, eg: robotrobot
+     * 模块帐号密码设置
+     * @param SSID 账号, 例如: "CoolGuyRobot"
+     * @param PASSWORD 密码, 例如: robotrobot
      */
     //% blockId=SoundSensor_SetWiFi
-    //% block="Set account %SSID| and password %PASSWORD|"
-    //% group=SoundSensor
+    //% block="设置人工智能 帐号%SSID|密码%PASSWORD|"
+    //% group=人工智能模块
     export function SoundSensor_SetWiFi(SSID: string, PASSWORD: string) {
         let Temp = control.createBuffer(1);
         Temp[0] = 0;
@@ -744,11 +745,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Mode setting
+     * 模块模式设置
      */
     //% blockId=SoundSensor_Setmode
-    //% block="Set SoundSensor mode as %mode|"
-    //% group=SoundSensor
+    //% block="设置人工智能模式%mode|"
+    //% group=人工智能模块
     export function SoundSensor_SetMode(mode: SoundSensor_Mode) {
         let modebuf = control.createBuffer(4);
         switch (mode) {
@@ -785,32 +786,32 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Is result of sound or talk there
+     * 语音识别(文字对话)内容结果
      */
     //% blockId=SoundSensor_Result_flag
-    //% block="Is result of sound or talk there?"
-    //% group=SoundSensor
+    //% block="有语音识别(文字对话)内容吗？"
+    //% group=人工智能模块
     export function SoundSensor_Result_flag(): boolean {
         SoundSensor_Search();
         return SS_valid;
     }
 
     /**
-     * The result of sound or talk
+     * 语音识别(文字对话)内容
      */
     //% blockId=SoundSensor_AsrResult
-    //% block="The result of sound or talk"
-    //% group=SoundSensor
+    //% block="读取语音识别(文字对话)内容"
+    //% group=人工智能模块
     export function SoundSensor_AsrResult(): string {
         return asr_result;
     }
 
     /**
-     * SoundSensor sends message
+     * 模块发送内容
      */
     //% blockId=SoundSensor_TtsContent
-    //% block="Send the message %str| of sound or talk"
-    //% group=SoundSensor
+    //% block="发送语音合成(文字对话)内容%str|"
+    //% group=人工智能模块
     export function SoundSensor_TtsContent(str: string) {
         serial.writeString(str);
         basic.pause(2000);
@@ -837,11 +838,11 @@ namespace Coolguy_advan {
     }
 
     /**
-     * wtr50 init
+     * 多路语音初始化
      */
     //% blockId=coolguy_wtr050_Init
-    //% block="Set port at %pin|"
-    //% group=wtr50_1
+    //% block="设定多路语音端口在%pin|"
+    //% group=多路语音模块
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
     export function wtr050_Init(exterpin: exter_ports3) {
@@ -871,13 +872,13 @@ namespace Coolguy_advan {
     }
 
     /**
-     * wtr50 start recording
+     * 多路语音开始记录
      * @param chan the channel of voice, eg: 1
      */
     //% blockId=coolguy_wtr050_recordstart
-    //% block="Start recording at channel %chan|"
+    //% block="开始录音在通道%chan|"
     //% chan.min=1  chan.max=6
-    //% group=wtr50_1
+    //% group=多路语音模块
     export function wtr050_recordstart(chan: number): void {
         wtr050_sendbyte(0xff);
         basic.pause(10);
@@ -890,12 +891,12 @@ namespace Coolguy_advan {
     }
 
     /**
-     * wtr50 stop recording
+     * 多路语音停止记录
      */
     //% blockId=coolguy_wtr050_recordstop
-    //% block="Stop recording"
+    //% block="停止录音"
     //% chan.min=1  chan.max=6
-    //% group=wtr50_1
+    //% group=多路语音模块
     export function wtr050_recordstop(): void {
         wtr050_sendbyte(0xff);
         basic.pause(10);
@@ -907,13 +908,13 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Play recording
+     * 多路语音播放记录
      * @param chan the channel of voice, eg: 1
      */
     //% blockId=coolguy_wtr050_playvoice
-    //% block="Play recoding at channel %chan|"
+    //% block="播放录音在通道%chan|"
     //% chan.min=1  chan.max=6
-    //% group=wtr50_1
+    //% group=多路语音模块
     export function wtr050_playvoice(chan: number): void {
         wtr050_sendbyte(0xff);
         basic.pause(10);
@@ -926,12 +927,12 @@ namespace Coolguy_advan {
     }
 
     /**
-     * Stop playing recording
+     * 多路语音停止播放
      */
     //% blockId=coolguy_wtr050_stopvoice
-    //% block="Stop playing"
+    //% block="停止播放"
     //% chan.min=1  chan.max=6
-    //% group=wtr50_1
+    //% group=多路语音模块
     export function wtr050_stopvoice(): void {
         wtr050_sendbyte(0xff);
         basic.pause(10);

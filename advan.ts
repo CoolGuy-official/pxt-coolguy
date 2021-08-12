@@ -75,7 +75,7 @@ enum VisionDetect_Others {
 /**
  * 酷哥进阶
  */
-//% weight=100 color=#ffc500 icon="\uf17b"
+//% weight=104 color=#ffc500 icon="\uf17b"
 //% groups=['多路语音模块', '人工智能模块', '摄像头模块', 'WIFI模块']
 //% block=酷哥进阶
 namespace Coolguy_advan {

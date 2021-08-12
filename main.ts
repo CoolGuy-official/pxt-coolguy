@@ -74,7 +74,7 @@ enum CmpStr_dir {
 /**
  * 酷哥基础
  */
-//% weight=100 color=#ffc500 icon="\u272a"
+//% weight=105 color=#ffc500 icon="\u272a"
 //% groups=['字符串比较','循线模块', '数码管', '红外遥控', '超声波模块', '电机', 'RGB', '其他']
 //% block="酷哥基础"
 namespace Coolguy_basic {

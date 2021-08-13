@@ -471,7 +471,7 @@ namespace Coolguy_basic {
     //% block="Remote channel at %channel| when %key| is pressed"
     //% channel.min=1   channel.max=8
     //% group=IRremote
-    export function coolguy_IR_KeyValueCmp(channel: number, key: remote_key): number {
+    export function coolguy_IR_KeyValueCmp(channel: number, key: remote_key): boolean {
         IR_ID = channel - 1;  //获取通道
 
         if (IRData[0] === 0 && IRData[1] === 0)  //是否松开

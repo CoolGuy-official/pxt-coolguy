@@ -5,6 +5,13 @@ enum motor_dir {
     REV
 }
 
+enum IR_state{
+    //% block=开启
+    Enable=1,
+    //% block=关闭
+    Disable=0
+}
+
 enum remote_key {
     //% block=Non
     Non = 0,
@@ -74,8 +81,8 @@ enum CmpStr_dir {
 /**
  * Coolguy basic extension
  */
-//% weight=100 color=#ffc500 icon="\u272a"
-//% groups=['CmpStr', WalkLine', 'NixieTube', 'IRremote', 'UltrasoundWave', 'Motors', 'RGB', others']
+//% weight=101 color=#ffc500 icon="\u272a"
+//% groups=['CmpStr', 'NixieTube', 'IRremote', 'UltrasoundWave', 'Motors', 'RGB', others']
 namespace Coolguy_basic {
     //----------------------字符串比较---------------------------------
     let Cmpstring = "";
@@ -199,351 +206,6 @@ namespace Coolguy_basic {
         return comdata;
     }
     
-    //----------------------循线模块-----------------------------------
-    let SensorGray_SCL: DigitalPin;
-    let SensorGray_SDA: DigitalPin;
-    let DATA_BUF = [0, 0, 0, 0, 0, 0];
-    let CmpValue_BUF = [0, 0, 0, 0, 0, 0];
-
-    /**
-     * GraySensors init(Except J1)
-     */
-    //% blockId=SensorGray_Init
-    //% block="Set GraySensors at %exterpin|"
-    //% group=WalkLine
-    //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
-    //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
-    export function SensorGray_Init(exterpin: exter_ports1) {
-        switch (exterpin) {
-            case exter_ports1.J5:
-                SensorGray_SCL = DigitalPin.P13;
-                SensorGray_SDA = DigitalPin.P14;
-                break;
-            case exter_ports1.J6:
-                SensorGray_SCL = DigitalPin.P15;
-                SensorGray_SDA = DigitalPin.P16;
-                break;
-            default:
-                break;
-        }
-        pins.digitalWritePin(SensorGray_SCL, 1);
-        pins.digitalReadPin(SensorGray_SDA);
-
-        SensorGray_Read();
-    }
-
-    /**
-     * Set the value as comparsion for five GraySensors
-     * @param CmpNum0 the comparsion fo channel0 GraySensors, eg: 500
-     * @param CmpNum1 the comparsion fo channel1 GraySensors, eg: 500
-     * @param CmpNum2 the comparsion fo channel2 GraySensors, eg: 500
-     * @param CmpNum3 the comparsion fo channel3 GraySensors, eg: 500
-     * @param CmpNum4 the comparsion fo channel4 GraySensors, eg: 500
-     */
-    //% blockId=SetCmpValue
-    //% block="set comparsion numbers from left to right as %CmpNum0|%CmpNum1|%CmpNum2|%CmpNum3|%CmpNum4|"
-    //% group=WalkLine
-    //% inlineInputMode=inline
-    export function SetCmpValue(CmpNum0: number, CmpNum1: number, CmpNum2: number, CmpNum3: number, CmpNum4: number) {
-        CmpValue_BUF[0] = CmpNum0;
-        CmpValue_BUF[1] = CmpNum1;
-        CmpValue_BUF[2] = CmpNum2;
-        CmpValue_BUF[3] = CmpNum3;
-        CmpValue_BUF[4] = CmpNum4;
-    }
-
-    /**
-     * Search the line in a specific number of intersections
-     * @param MaxSpeed the maxinum of speed, eg: 255
-     * @param LineNum the number of intersection, eg: 1
-     * @param EndTime the time after crossing the intersections, eg: 0.25
-     */
-    //% blockId=RunWalkLine
-    //% block="Max speed%MaxSpeed| Search %LineNum| intersection in %EndTime| seconds"
-    //% group=WalkLine
-    //% MaxSpeed.min=0 MaxSpeed.max=255
-    export function RunWalkLine(MaxSpeed: number, LineNum: number, EndTime: number) {
-        let temp: number;
-
-        for (let i = 0; i < LineNum; i++) {
-            WalkLineFunction(MaxSpeed);
-            basic.pause(2);
-        }
-
-        temp = EndTime * 100;
-        while (temp--) {
-            WalkReadValue();
-            WalkLineMotorControl(MaxSpeed);
-
-            //basic.pause(3);
-        }
-
-        LeftMotorSpeed(-255);	//反正
-        RightMotorSpeed(-255);
-        basic.pause(20);
-        LeftMotorSpeed(0);	//停止
-        RightMotorSpeed(0);
-    }
-
-    /**
-     * Search line in a specific time
-     * @param MaxSpeed the maxinum of speed, eg: 255
-     * @param Cnt the time searching, eg: 5
-     */
-    //% blockId=RunWalkLine_Timer
-    //% block="Max speed%MaxSpeed| Search line in %Cnt| seconds"
-    //% group=WalkLine
-    //% MaxSpeed.min=0 MaxSpeed.max=255
-    export function RunWalkLine_Timer(MaxSpeed: number, Cnt: number) {
-        let i = Cnt * 56;
-
-        while (i--) {
-            WalkReadValue();
-            WalkLineMotorControl(MaxSpeed);
-            basic.pause(1);
-        }
-
-        LeftMotorSpeed(0);	//停止
-        RightMotorSpeed(0);
-    }
-
-    /**
-     * Search line in turn-left mode
-     * @param MaxSpeed the maxinum of speed, eg: 255
-     * @param LineNum the number of intersection, eg: 1
-     */
-    //% blockId=RunWalkLine_Turn_Left
-    //% block="Max speed %MaxSpeed| Turn left after %LineNum| intersections"
-    //% group=WalkLine
-    //% MaxSpeed.min=0 MaxSpeed.max=255
-    export function RunWalkLine_Turn_Left(MaxSpeed: number, LineNum: number) {
-        let i = 0;
-        let j = LineNum;
-
-        while (j--) {
-            LeftMotorSpeed(MaxSpeed * -1);
-            RightMotorSpeed(MaxSpeed);
-
-            i = 0;
-            if (WalkReadValue() != 0) {	//判断车在线上														
-                while (1) {
-                    basic.pause(1);
-                    WalkReadValue();
-                    if (DATA_BUF[4] < CmpValue_BUF[4]) {
-                        if (++i > 4)
-                            break;
-                    } else
-                        i = 0;
-                }
-            }
-
-            i = 0;
-            while (1) {
-                basic.pause(1);
-                WalkReadValue();
-                if (DATA_BUF[2] < CmpValue_BUF[2]) {
-                    if (++i > 4)
-                        break;
-                }
-                else
-                    i = 0;
-            }
-
-            if (j === 0) {
-                LeftMotorSpeed(MaxSpeed);  //反转实现急停
-                RightMotorSpeed(1 - MaxSpeed);
-                basic.pause(20);
-            }
-        }
-
-        LeftMotorSpeed(0);	//停止
-        RightMotorSpeed(0);
-    }
-
-    /**
-     * Search line in turn-right mode
-     * @param MaxSpeed the maxinum of speed, eg: 255
-     * @param LineNum the number of intersection, eg: 1
-     */
-    //% blockId=RunWalkLine_Turn_Right
-    //% block="Max speed %MaxSpeed| Turn right after %LineNum| intersections"
-    //% group=WalkLine
-    //% MaxSpeed.min=0 MaxSpeed.max=255
-    export function RunWalkLine_Turn_Right(MaxSpeed: number, LineNum: number) {
-        let i = 0;
-        let j = LineNum;
-
-        while (j--) {
-            LeftMotorSpeed(MaxSpeed);
-            RightMotorSpeed(MaxSpeed * -1);
-
-            i = 0;
-            if (WalkReadValue() != 0) {	//判断车在线上
-                while (1) {
-                    basic.pause(1);
-                    WalkReadValue();
-                    if (DATA_BUF[0] < CmpValue_BUF[0]) {
-                        if (++i > 4)
-                            break;
-                    } else
-                        i = 0;
-                }
-            }
-            i = 0;
-            while (1) {
-                basic.pause(1);
-                WalkReadValue();
-                if (DATA_BUF[2] < CmpValue_BUF[2]) {
-                    if (++i > 4)
-                        break;
-                }
-                else
-                    i = 0;
-            }
-            if (j == 0) {
-                LeftMotorSpeed(1 - MaxSpeed);
-                RightMotorSpeed(MaxSpeed);
-                basic.pause(20);
-            }
-        }
-
-        LeftMotorSpeed(0);	//停止
-        RightMotorSpeed(0);
-    }
-
-    function WalkReadValue(): number {
-        let Temp = 0;
-        SensorGray_Read();
-
-        if (DATA_BUF[0] < CmpValue_BUF[0]) {
-            Temp++;
-        }
-        if (DATA_BUF[1] < CmpValue_BUF[1]) {
-            Temp++;
-        }
-        if (DATA_BUF[2] < CmpValue_BUF[2]) {
-            Temp++;
-        }
-        if (DATA_BUF[3] < CmpValue_BUF[3]) {
-            Temp++;
-        }
-        if (DATA_BUF[4] < CmpValue_BUF[4]) {
-            Temp++;
-        }
-
-        return Temp;
-    }
-
-    function WalkLineMotorControl(MaxSpeed: number) {
-        if (DATA_BUF[1] < CmpValue_BUF[1]) {  //左边触发黑线 		
-            LeftMotorSpeed(0);
-            RightMotorSpeed(MaxSpeed);
-        }
-        else if (DATA_BUF[3] < CmpValue_BUF[3]) { //右边触发黑线 
-            LeftMotorSpeed(MaxSpeed);
-            RightMotorSpeed(0);
-        }
-        /*		else if(DATA_BUF[0] < CmpValue_BUF[0]) {   //最左边触发黑线     			
-                    LeftMotorSpeed(MaxSpeed);
-                    RightMotorSpeed(MaxSpeed);
-                    }
-                    else if(DATA_BUF[4] < CmpValue_BUF[4]) {   //最右边触发黑线   		
-                        LeftMotorSpeed(MaxSpeed);
-                        RightMotorSpeed(MaxSpeed);
-                    }*/
-        else {
-            LeftMotorSpeed(MaxSpeed);
-            RightMotorSpeed(MaxSpeed);
-        }
-    }
-
-    function WalkLineFunction(MaxSpeed: number) {
-        let Count = 0;
-
-        while (1) {
-            WalkReadValue();
-
-            if (!(DATA_BUF[0] < CmpValue_BUF[0] || DATA_BUF[4] < CmpValue_BUF[4])) //判断不在路口
-            {
-                if (Count > 4) {//判断是否已经检测到黑线
-                    //delay(50);
-                    return;
-                }
-                else
-                    Count = 0;
-            }
-            else	//在黑线上
-                Count++;
-
-            WalkLineMotorControl(MaxSpeed);
-            basic.pause(1);
-        }
-    }
-
-    function RightMotorSpeed(s: number) {
-        // s ranges from 0 to 255
-        if (s >= 0)
-            exter_motor_drive(motor_ports.J8, s * 3/4, motor_dir.REV)
-        else {
-            s = 0 - s;  //转为整数
-            exter_motor_drive(motor_ports.J8, s * 3/4, motor_dir.FWD)
-        }
-    }
-
-    function LeftMotorSpeed(s: number) {
-        // s ranges from 0 to 255
-        if (s >= 0)
-            exter_motor_drive(motor_ports.J7, s * 3/4, motor_dir.FWD)
-        else {
-            s = 0 - s;  //转为整数
-            exter_motor_drive(motor_ports.J7, s * 3/4, motor_dir.REV)
-        }
-    }
-
-    function SensorGray_Read() {
-        let DATA = 0;
-        let i = 0, j = 0;
-
-        pins.digitalWritePin(SensorGray_SCL, 0);            //开始接受数据
-        control.waitMicros(20);
-
-        for (j = 0; j < 5; j++) {
-            DATA = 0;
-            for (i = 0; i < 16; i++) {
-                pins.digitalWritePin(SensorGray_SCL, 0);    //设置低电平
-                control.waitMicros(20);
-
-                DATA <<= 1;
-                if (pins.digitalReadPin(SensorGray_SDA))    //判断是否高电平
-                {
-                    DATA += 1;
-                }
-                //DATA <<= 1;
-                //control.waitMicros(20);
-
-                pins.digitalWritePin(SensorGray_SCL, 1);	//设置高电平
-                control.waitMicros(10);
-            }
-            DATA &= 0x3ff;
-            DATA_BUF[j] = DATA;  //数据存入缓存
-        }
-        basic.pause(1)
-    }
-
-    /**
-     * GraySensors get
-     * @param num select the sensor, eg: 1
-     */
-    //% blockId=SensorGray_ReadOne
-    //% block="get the value from No.%num| Sensor"
-    //% num.min=1 num.max=5
-    //% group=WalkLine
-    export function SensorGray_ReadOne(num: number): number {
-        SensorGray_Read();
-        return DATA_BUF[num - 1];
-    }
-
-
     //----------------------数码管-----------------------------------
     let Segment_SCL: DigitalPin;
     let Segment_SDA: DigitalPin;
@@ -679,24 +341,15 @@ namespace Coolguy_basic {
     let IR_INpin = DigitalPin.P0;
 
     function IR_Remote_Task() {
-        let N: number = 0;
-
+        let t = control.millis();
         while (!pins.digitalReadPin(IR_INpin))            //等IR变为高电平，跳过9ms的前导低电平信号
         {
-            //control.waitMicros(10);
-            if (++N >= 1000) {
+            if (control.millis() - t >= 20) {
                 return;
             }
         }
 
-        if (N > 250 && (Remote_Type == 0 || Remote_Type == 1)) //新的NEC遥控   引导信号N大概375-380
-        {
-            NECIR_Scan();     //新遥控器
-        }
-        else if (N > 110 && (Remote_Type == 0 || Remote_Type == 2))  //旧的遥控  引导信号N大概120-125
-        {
-            IR_Scan();  //旧遥控器
-        }
+        IR_Scan();
 
         IRCode = IRData[1];
 
@@ -704,131 +357,41 @@ namespace Coolguy_basic {
         IR_ClearFlay();
     }
 
-    function NECIR_Scan() {
-        let j: number, k: number;
-        let N = 0;
-        let IRCOM = [0, 0, 0, 0];
-
-        N = 0;
-        while (pins.digitalReadPin(IR_INpin))           //等待IR 变为低电平，跳过4.5ms的前导高电平信号
-        {
-            //control.waitMicros(10);
-            if (++N >= 500) {
-                return;
-            }
-        }
-        if (N < 160)     //判断是不是4.5ms引导码
-        {
-            return;
-        }
-
-        for (j = 0; j < 4; j++) {        //收集四组数据
-            for (k = 0; k < 8; k++) {       //每组数据8位
-                N = 0;
-                while (!pins.digitalReadPin(IR_INpin)) {
-                    control.waitMicros(10);
-                    if (++N >= 100) {
-                        return;
-                    }
-                }
-                N = 0;
-                while (pins.digitalReadPin(IR_INpin)) {
-                    //control.waitMicros(10);
-                    if (++N >= 200) {
-                        return;
-                    }
-                }
-                IRCOM[j] = IRCOM[j] >> 1;
-                if (N >= 40) {
-                    IRCOM[j] = IRCOM[j] | 0x80;  //数据最高位补1
-                }
-            }//end for k
-        }//end for j
-
-        if (IRCOM[2] + IRCOM[3] !== 255)   //判断两个数是不是取反关系
-        {
-            return;
-        }
-
-        if (IRCOM[2] > 1) {
-            switch (IRCOM[2]) {
-                case 0x40: // '+'按键  代表上键
-                    IRData[1] = 1;
-                    break;
-
-                case 0x19:  // '-'按键  代表下键
-                    IRData[1] = 2;
-                    break;
-
-                case 0x07:  //前进按键 代表左键
-                    IRData[1] = 3;
-                    break;
-
-                case 0x09:  //后退按键 代表右键
-                    IRData[1] = 4;
-                    break;
-
-                case 0x18:  //2键对应 遥控 B+上键
-                    IRData[1] = 5;
-                    break;
-
-                case 0x52:  //8键对应B+下键
-                    IRData[1] = 6;
-                    break;
-
-                case 0x08:  //4键对应B+左键
-                    IRData[1] = 7;
-                    break;
-
-                case 0x5A:  //6键对应B+右键
-                    IRData[1] = 8;
-                    break;
-
-                default:
-                    IRData[1] = 0;
-                    break;
-            }
-        }
-        if (Remote_Type === 0)
-            Remote_Type = 1;
-    }
-
     function IR_Scan() {
         let j: number, k: number;
-        let N = 0;
         let IRCOM = [0, 0];
         let buf = [0, 0, 0, 0, 0, 0, 0, 0];
-
-        N = 0;
+        let t = control.millis();
         while (pins.digitalReadPin(IR_INpin)) {
-            //control.waitMicros(10);
-            if (++N >= 100)
-                return;
+            if (control.millis() - t >= 10000) return;
         }
         for (j = 0; j < 2; j++)         //收集2组数据
         {
             for (k = 0; k < 8; k++)        //每组数据8位
             {
-                N = 0;
+                t = control.millis();
                 while (!pins.digitalReadPin(IR_INpin))          //等待 IR 变为高电电平
                 {
-                    if (++N >= 100) {
+                    if (control.millis() - t > 3000) {
                         return;
                     }
                 }
-                N = 0;
+                t = control.micros();
                 while (pins.digitalReadPin(IR_INpin))           //计算IR高电平时间
                 {
-                    if (++N >= 100)
-                        return;              //0.14ms计数过长自动离开
+                    if ((buf[k]=control.micros()-t) >= 3000)
+                        return;                                 //计数过长自动离开
+                    control.waitMicros(10);
                 }
                 IRCOM[j] = IRCOM[j] >> 1;
-                buf[k] = N;
-                if (N >= 16) {
+                if (buf[k] >= 400) {
                     IRCOM[j] = IRCOM[j] | 0x80; //数据最高位补1
                 }
             }//end for k
         }//end for j
+
+
+
         if (IRCOM[0] + IRCOM[1] !== 255)
             return;
 
@@ -839,13 +402,11 @@ namespace Coolguy_basic {
             }
         }
         else {
-            if (((IRCOM[0] >> 4) & 0xf) <= 7)
-                IRData[0] = IRCOM[0] >> 4;
-            if ((IRCOM[0] & 0x0f) <= 8)
-                IRData[1] = IRCOM[0] & 0x0f;
+                IRData[0] = ((IRCOM[0] >> 4)) / 2;
+                IRData[1] = ((IRCOM[0] & 0x0f) - 1) / 2;
         }
-
         if (Remote_Type == 0) Remote_Type = 2;
+        return;
     }
 
     function IR_ClearFlay() {
@@ -890,19 +451,18 @@ namespace Coolguy_basic {
     }
 
     /**
-     * IR_Check
+     * IR receive enable/disable
      */
-    //% blockId=coolguy_IR_Check
-    //% block="IR receive"
+    //% blockId=coolguy_IR_setstate
+    //% block="IR receive %status|"
     //% group=IRremote
-    export function coolguy_IR_check() {
-        while (1) {
-            if (!pins.digitalReadPin(IR_INpin)) {
-                IR_Remote_Task();
-            }
+    export function coolguy_IR_setstate(status: IR_state) {
+        state = status;
+        if (state) {
+            control.inBackground(function () { while (state) { IR_Remote_Task() } });
         }
     }
-
+    let state: IR_state;
     /**
      * IR_Remote
      * @param channel the channel of remote, eg: 1
@@ -916,14 +476,14 @@ namespace Coolguy_basic {
 
         if (IRData[0] === 0 && IRData[1] === 0)  //是否松开
         {
-            if (key === 0) return 1;
+            if (key === 0) return true;
         }
         else {
-            if (key === IRCode && ((channel - 1) === IRData[0] || Remote_Type === 1)) {
-                return 1;
+            if (key === IRCode && ((channel - 1) === IRData[0])) {
+                return true;
             }
         }
-        return 0;
+        return false;
     }
     //---------------------UltrasoundWave读取函数--------------------------------------
     let ultrasonic_tri = DigitalPin.P15;

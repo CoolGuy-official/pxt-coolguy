@@ -11,9 +11,9 @@
     },
     "files": [
         "README.md",
-        "version.ts",
-        "version.cpp",		
         "main.ts",
+        "version.ts",
+        "version.cpp",
         "_locales/zh/Coolguy_basic_extension-strings.json",
         "_locales/zh/Coolguy_basic_extension-jsdoc-strings.json"
     ],

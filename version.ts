@@ -13,3 +13,11 @@ namespace input {
     export function disableButtons(): void { }
 
 }
+
+namespace Coolguy_basic{
+    /**
+     * Choose Microbit version for IR remote
+     */
+    //%shim=Coolguy_basic::IR_choose
+    export function IR_choose(): any { };
+}

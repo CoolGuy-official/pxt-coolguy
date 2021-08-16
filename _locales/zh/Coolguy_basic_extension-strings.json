@@ -12,7 +12,7 @@
   "Coolguy_basic.SetCmpValue|block": "设置五灰度比较(从左到右)%CmpNum0|%CmpNum1|%CmpNum2|%CmpNum3|%CmpNum4|",
   "Coolguy_basic.coolguy_IR_Init|block": "红外遥控初始化于引脚|%pin|",
   "Coolguy_basic.coolguy_IR_KeyValueCmp|block": "遥控通道%channel|%key|键按下",
-  "Coolguy_basic.coolguy_IR_state|block": "红外遥控接收%status|",
+  "Coolguy_basic.coolguy_IR_state|block": "%bversion|红外遥控接收%status|",
   "Coolguy_basic.coolguy_Set_Segment2|block": "数码管显示%num1|:%num2|",
   "Coolguy_basic.coolguy_Set_Segment|block": "数码管显示%num|",
   "Coolguy_basic.coolguy_WS2812_Init|block": "设定RGB端口%exterpin",

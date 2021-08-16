@@ -1,10 +1,16 @@
 enum motor_dir {
-    //% block=正转
+    //% block=FWD
     FWD,
-    //% block=反转
+    //% block=REV
     REV
 }
 
+enum BoradType{
+    //% block=V1
+    V1=0,
+    //% block=V2
+    V2=1
+}
 enum IR_state{
     //% block=开启
     Enable=1,
@@ -13,23 +19,23 @@ enum IR_state{
 }
 
 enum remote_key {
-    //% block=无
+    //% block=Non
     Non = 0,
-    //% block=上
+    //% block=Up
     Up = 1,
-    //% block=下
+    //% block=Down
     Down = 2,
-    //% block=左
+    //% block=Left
     Left = 3,
-    //% block=右
+    //% block=Right
     Right = 4,
-    //% block=上+B
+    //% block=Up_B
     Up_B = 5,
-    //% block=下+B
+    //% block=Down_B
     Down_B = 6,
-    //% block=左+B
+    //% block=Left_B
     Left_B = 7,
-    //% block=右+B
+    //% block=Right_B
     Right_B = 8
 }
 
@@ -72,49 +78,48 @@ enum servo_ports {
 }
 
 enum CmpStr_dir {
-    //% block="前面的"
+    //% block="ToBefore"
     ToBefore,
-    //% block="后面的"
+    //% block="ToAfter"
     ToAfter
 }
 
 /**
- * 酷哥基础
+ * Coolguy basic extension
  */
 //% weight=105 color=#ffc500 icon="\u272a"
-//% groups=['字符串比较', '数码管', '红外遥控', '超声波模块', '电机', 'RGB', '其他']
-//% block="酷哥基础"
+//% groups=['CmpStr', 'NixieTube', 'IRremote', 'UltrasoundWave', 'Motors', 'RGB', others']
 namespace Coolguy_basic {
     //----------------------字符串比较---------------------------------
     let Cmpstring = "";
     
     /**
-     * 设置比较字符串
-     * @param str 作为比较的字符, 例如: hello
+     * Set the compared string
+     * @param str the string as comparsion, eg: hello
      */
     //% blockId=CmpStr_SetString
-    //% block="设定比较的字符为 %str|"
-    //% group=字符串比较
+    //% block="Set the compared string %str|"
+    //% group=CmpStr
     export function CmpStr_SetString(str: string) {
         Cmpstring = str;
     }
 
     /**
-     * 获取比较内容
+     * Get the compared string
      */
     //% blockId=CmpStr_GetString
-    //% block="获取要比较的字符串"
-    //% group=字符串比较
+    //% block="Get the compared string"
+    //% group=CmpStr
     export function CmpStr_GetString(): string {
         return Cmpstring;
     }
 
     /**
-     * 与比较字符是否相同 
+     * Is the compared string same as expected? 
      */
     //% blockId=CmpStr_StringEqual
-    //% block="比较内容和 %str| 相同吗"
-    //% group=字符串比较
+    //% block="Is the compared string same as %str|"
+    //% group=CmpStr
     export function CmpStr_StringEqual(str: string): boolean {
         if(str === Cmpstring)
             return true;    
@@ -123,11 +128,11 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 是否包含在比较字符中
+     * Is the string included? 
      */
     //% blockId=CmpStr_IncludeString
-    //% block="比较字符是否包含 %str|"
-    //% group=字符串比较
+    //% block="Do the compared string include %str|"
+    //% group=CmpStr
     export function CmpStr_IncludeString(str: string): boolean {     
         if(Cmpstring.includes(str))
             return true;
@@ -136,11 +141,11 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 从指定内容前或后获取数字
+     * Get the number from the compared string
      */
     //% blockId=CmpStr_Content_ToInt
-    //% block="从比较内容提取 %String_part| %position| 的数字"
-    //% group=字符串比较
+    //% block="Get the number %String_part| %position|from the compared string"
+    //% group=CmpStr
     export function CmpStr_Content_ToInt(String_part: string, position: CmpStr_dir): number {
         let s_position = Cmpstring.indexOf(String_part);
 
@@ -187,11 +192,11 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 从指定内容前或后获取字符
+     * Get the string from the compared
      */
     //% blockId=CmpStr_Content_ToString
-    //% block="从比较内容提取 %String_part| %position| 的文本"
-    //% group=字符串比较
+    //% block="Get the string %String_part| %position|from the compared string"
+    //% group=CmpStr
     export function CmpStr_Content_ToString(String_part: string, position: CmpStr_dir): string {
         let s_position = Cmpstring.indexOf(String_part);
         let comdata = "";
@@ -212,11 +217,11 @@ namespace Coolguy_basic {
     let Segment_SDA: DigitalPin;
 
     /**
-     * 数码管初始化
+     * NixieTube init
      */
     //% blockId=Segment_Init
-    //% block="数码管初始化到引脚%exterpin|"
-    //% group=数码管
+    //% block="Set port at %exterpin|"
+    //% group=NixieTube
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
     export function Segment_Init(exterpin: exter_ports1) {
@@ -281,11 +286,11 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 数码管显示
+     * NixieTube display
      */
     //% blockId=coolguy_Set_Segment
-    //% block="数码管显示%num|"
-    //% group=数码管
+    //% block="NixieTube displays number %num|"
+    //% group=NixieTube
     export function coolguy_Set_Segment(num: number): void {
         let i: number;
         let num_int: number;
@@ -318,11 +323,11 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 数码管显示
+     * NixieTube display 
      */
     //% blockId=coolguy_Set_Segment2
-    //% block="数码管显示%num1|:%num2|"
-    //% group=数码管
+    //% block="NixieTube display %num1|:%num2|"
+    //% group=NixieTube
     export function coolguy_Set_Segment2(num1: number, num2: number) {
         let i: number;
         Segment_Start();
@@ -334,13 +339,13 @@ namespace Coolguy_basic {
         basic.pause(1); //加上延时，避免一直发数据 
     }
 
-    //--------------------------红外遥控---------------------------------------
+    //--------------------------IRs---------------------------------------
     let IR_ID = 0;
     let IRData = [0, 0];
     let IRCode = 0;
     let IR_INpin = DigitalPin.P0;
 
-    function IR_Remote_Task() {
+    function IR_Remote_Task(bversion:BoradType) {
         let t = control.millis();
         while (!pins.digitalReadPin(IR_INpin))            //等IR变为高电平，跳过9ms的前导低电平信号
         {
@@ -349,7 +354,7 @@ namespace Coolguy_basic {
             }
         }
 
-        if(IR_choose()){
+        if(bversion){
             NIR_Scan();       //V2
         }
         else{
@@ -394,8 +399,6 @@ namespace Coolguy_basic {
                 }
             }//end for k
         }//end for j
-
-
 
         if (IRCOM[0] + IRCOM[1] !== 255)
             return;
@@ -465,11 +468,11 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 红外遥控初始化
+     * IR_Init
      */
     //% blockId=coolguy_IR_Init
-    //% block="红外遥控初始化于引脚|%pin|"
-    //% group=红外遥控
+    //% block="Set port at %pin|"
+    //% group=IRremote
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
     export function coolguy_IR_Init(exterpin: exter_ports) {
@@ -499,26 +502,26 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 设置红外遥控接收状态
+     * IR receive enable/disable
      */
     //% blockId=coolguy_IR_setstate
-    //% block="红外遥控接收%state|"
-    //% group=红外遥控
-    export function coolguy_IR_setstate(status: IR_state) {
+    //% block="%bversion|IR receive %status|"
+    //% group=IRremote
+    export function coolguy_IR_setstate(bversion:BoradType,status: IR_state) {
         state = status;
         if (state) {
-            control.inBackground(function () { while (state) { IR_Remote_Task() } });
+            control.inBackground(function () { while (state) { IR_Remote_Task(bversion) } });
         }
     }
     let state: IR_state;
     /**
      * IR_Remote
-     * @param channel 遥控器通道，例如：1
+     * @param channel the channel of remote, eg: 1
      */
     //% blockId=coolguy_IR_KeyValueCmp
-    //% block="遥控通道%channel|%key|键按下"
+    //% block="Remote channel at %channel| when %key| is pressed"
     //% channel.min=1   channel.max=8
-    //% group=红外遥控
+    //% group=IRremote
     export function coolguy_IR_KeyValueCmp(channel: number, key: remote_key): boolean {
         IR_ID = channel - 1;  //获取通道
 
@@ -533,17 +536,16 @@ namespace Coolguy_basic {
         }
         return false;
     }
-    
     //---------------------UltrasoundWave读取函数--------------------------------------
     let ultrasonic_tri = DigitalPin.P15;
     let ultrasonic_ech = DigitalPin.P16;
 
     /**
-     * 超声波模块初始化
+     * UltrasoundWave init
      */
     //% blockId=ultrasonic_Init
-    //% block="超声波模块初始化到%exterpin|"
-    //% group=超声波模块
+    //% block="Set port at %exterpin|"
+    //% group=UltrasoundWave
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
     export function ultrasonic_Init(exterpin: exter_ports1) {
@@ -574,11 +576,11 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 超声波距离读取
+     * UltrasoundWave get
      */
     //% blockId=ultrasonic_get
-    //% block="超声波距离读取"
-    //% group=超声波模块
+    //% block="Get the value of distance"
+    //% group=UltrasoundWave
     export function ultrasonic_get(): number {
         let k = 0;
         let sum = 0;
@@ -592,11 +594,11 @@ namespace Coolguy_basic {
 
     //---------------------PM2.5-------------------------------------------------
     // /**
-    //  * PM2.5读取
+    //  * PM2.5 Get
     //  */
     // //% blockId=Read_PM2_5
-    // //% block="PM2.5读取"
-    // //% group=其他
+    // //% block="PM2.5 Get"
+    // //% group=others
     // export function Read_PM2_5(): number {
     //     let voMeasured: number, calcVoltage: number, dustDensity: number;
 
@@ -614,10 +616,10 @@ namespace Coolguy_basic {
     
     /**
      * RGB
-     * @param exterpin RGB接口, 例如: servo_ports.J2
+     * @param exterpin the ports component connect, eg: servo_ports.J2
      */
     //% blockId=coolguy_WS2812_Init
-    //% block="设定RGB端口%exterpin"
+    //% block="Set RGB port as %exterpin"
     //% group=RGB
     export function coolguy_WS2812_Init(exterpin: servo_ports) {
         switch (exterpin) {
@@ -637,13 +639,13 @@ namespace Coolguy_basic {
 
     /**
      * RGB
-     * @param brightness RGB亮度, 例如: 120
-     * @param r 设定红色, 例如: 0
-     * @param g 设定绿色, 例如: 0
-     * @param b 设定蓝色, 例如: 255
+     * @param brightness the brightness when RGB on, eg: 120
+     * @param r set red, eg: 0
+     * @param g set green, eg: 0
+     * @param b set blue, eg: 255
      */
     //% blockId=coolguy_WS2812_SetRGB
-    //% block="亮度 %brightness|红 %r|绿 %g|蓝 %b|"
+    //% block="Brightness %brightness|Red %r|Green %g|Blue%b|"
     //% brightness.min=0 brightness.max=255
     //% r.min=0 r.max=255 g.min=0 g.max=255 b.min=0 b.max=255 
     //% inlineInputMode=inline
@@ -655,14 +657,14 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 外接按键检测
-     * @param exterpin 按钮连接端口, 例如: exter_ports.J1
+     * Button
+     * @param exterpin the ports component connect, eg: exter_ports.J1
      */
     //% blockId=coolguy_exter_button
-    //% block="当按键%pin|被松开时"
+    //% block="Is button %pin|released?"
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
-    //% group=其他
+    //% group=others
     export function exter_button(exterpin: exter_ports): number {
         let pin: DigitalPin;
 
@@ -699,17 +701,17 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 电机控制
-     * @param exterpin 电机接口, 例如: motor_ports.J7
-     * @param dir 电机转向, 例如: motor_dir.FWD
-     * @param speed 电机转速(0到1023), 例如: 255
+     * Motor
+     * @param exterpin the ports component connect, eg: motor_ports.J7
+     * @param dir the turn of motor, eg: motor_dir.FWD
+     * @param speed the speed of motor and range from 0 to 255, eg: 255
      */
     //% blockId=coolguy_extermotor_drive
-    //% block="电机%exterpin|以%speed|速度%dir|转动" 
+    //% block="Set Motor %exterpin|speed %speed| as %dir|" 
     //% speed.min=0 speed.max=255
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
-    //% group=电机
+    //% group=Motors
     export function exter_motor_drive(exterpin: motor_ports, speed: number, dir: motor_dir): void {
         let motor_pin1: AnalogPin;
         let motor_pin2: AnalogPin;
@@ -746,89 +748,89 @@ namespace Coolguy_basic {
     }
 
     /**
-     * 小车前进
-     * @param speed 小车速度, 例如: 255
-     * 左电机: IO5/11
-     * 右电机: IO8/12
+     * Car go straight
+     * @param speed the speed of car, eg: 255
+     * left: IO5/11
+     * right: IO8/12
      */
     //% blockId=coolguy_extermotor_go
-    //% block="小车前进%speed|(速度)" 
+    //% block="let car go straight at %speed|" 
     //% speed.min=0 speed.max=255
-    //% group=电机
+    //% group=Motors
     export function exter_motor_go(speed: number): void {
         exter_motor_drive(motor_ports.J7, speed, motor_dir.FWD)
         exter_motor_drive(motor_ports.J8, speed, motor_dir.REV)
     }
 
     /**
-     * 小车后退
-     * @param speed 小车速度, 例如: 255
-     * 左电机: IO5/11
-     * 右电机: IO8/12
+     * Car go back
+     * @param speed the speed of car, eg: 255
+     * left: IO5/11
+     * right: IO8/12
      */
     //% blockId=coolguy_extermotor_back
-    //% block="小车后退%speed|(速度)" 
+    //% block="let car go back at %speed|" 
     //% speed.min=0 speed.max=255
-    //% group=电机
+    //% group=Motors
     export function exter_motor_back(speed: number): void {
         exter_motor_drive(motor_ports.J7, speed, motor_dir.REV)
         exter_motor_drive(motor_ports.J8, speed, motor_dir.FWD)
     }
 
     /**
-     * 小车停止
-     * 左电机: IO5/11
-     * 右电机: IO8/12
+     * Car stop
+     * left: IO5/11
+     * right: IO8/12
      */
     //% blockId=coolguy_extermotor_stop
-    //% block="令小车停止" 
-    //% group=电机
+    //% block="let car stop" 
+    //% group=Motors
     export function exter_motor_stop(): void {
         exter_motor_drive(motor_ports.J7, 0, motor_dir.FWD)
         exter_motor_drive(motor_ports.J8, 0, motor_dir.REV)
     }
 
     /**
-     * 小车左转(两轮反向)
-     * @param speed 轮子速度, 例如: 255
-     * 左电机: IO5/11
-     * 右电机: IO8/12
+     * Car turn left(wheels reverse)
+     * @param speed the speed of wheels, eg: 255
+     * left: IO5/11
+     * right: IO8/12
      */
     //% blockId=coolguy_extermotor_left
-    //% block="让小车左转 %speed|" 
+    //% block="let car turn left %speed|" 
     //% speed.min=0 speed.max=255
-    //% group=电机
+    //% group=Motors
     export function exter_motor_left(speed: number): void {
         exter_motor_drive(motor_ports.J7, speed, motor_dir.REV)
         exter_motor_drive(motor_ports.J8, speed, motor_dir.REV)
     }
 
     /**
-     * 小车右转(两轮反向)
-     * @param speed 轮子速度, 例如: 255
-     * 左电机: IO5/11
-     * 右电机: IO8/12
+     * Car turn right(wheels reverse)
+     * @param speed the speed of wheels, eg: 255
+     * left: IO5/11
+     * right: IO8/12
      */
     //% blockId=coolguy_extermotor_right
-    //% block="让小车右转 %speed|" 
+    //% block="let car turn right %speed|" 
     //% speed.min=0 speed.max=255
-    //% group=电机
+    //% group=Motors
     export function exter_motor_right(speed: number): void {
         exter_motor_drive(motor_ports.J7, speed, motor_dir.FWD)
         exter_motor_drive(motor_ports.J8, speed, motor_dir.FWD)
     }
 
     /**
-     * 舵机控制
-     * @param pin 舵机连接端口, 例如: AnalogPin.P0
-     * @param val 舵机期望角度, 例如: 90
+     * Servo
+     * @param pin the pin selected as output, eg: AnalogPin.P0
+     * @param val the expected rotation of servo, eg: 90
      */
     //% blockId=coolguy_servocontrol
-    //% block="舵机连接至%pin|，舵机旋转%val|度"
+    //% block="Servo %pin| turn to %val|"
     //% val.min=0 val.max=180
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=1
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
-    //% group=其他
+    //% group=others
     export function servo_control(exterpin: servo_ports, val: number) {
         let pin = AnalogPin.P1;
         switch (exterpin) {

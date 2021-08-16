@@ -7,7 +7,7 @@
         "core": "*",
         "neopixel": "github:Microsoft/pxt-neopixel",
         "Coolguy_advan_extension": "github:CoolGuy-official/Microbit-advan#v0.2.3",
-        "MuVisionSensor":"github:CoolGuy-official/MuVisionSensor#v0.0.2"
+        "MuVisionSensor": "github:CoolGuy-official/MuVisionSensor#v0.0.2"
     },
     "files": [
         "README.md",

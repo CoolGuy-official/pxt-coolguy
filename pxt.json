@@ -1,6 +1,6 @@
 {
     "name": "Coolguy_basic_extension",
-    "version": "0.3.4",
+    "version": "0.3.5",
     "description": "Coolguy basic extension",
     "license": "MIT",
     "dependencies": {
@@ -10,10 +10,10 @@
         "MuVisionSensor": "github:CoolGuy-official/MuVisionSensor#v0.0.2"
     },
     "files": [
-        "README.md",
+        "README.md"，
         "main.ts",
-        "version.ts",
-        "version.cpp",
+        "buttons.ts",
+        "buttons.cpp",
         "_locales/zh/Coolguy_basic_extension-strings.json",
         "_locales/zh/Coolguy_basic_extension-jsdoc-strings.json"
     ],

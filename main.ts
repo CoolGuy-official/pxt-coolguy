@@ -40,40 +40,40 @@ enum remote_key {
 }
 
 enum exter_ports {
-    //% block="AD0"
+    //% block="P0"
     J1,
-    //% block="IO1"
+    //% block="P1"
     J2,
-    //% block="IO2"
+    //% block="P2"
     J3,
-    //% block="IO16"
+    //% block="P16"
     J4,
-    //% block="IO13/14"
+    //% block="P13/14"
     J5,
-    //% block="IO15/16"
+    //% block="P15/16"
     J6
 }
 
 enum exter_ports1 {
-    //% block="IO13/14"
+    //% block="P13/14"
     J5,
-    //% block="IO15/16"
+    //% block="P15/16"
     J6
 }
 
 enum motor_ports {
-    //% block="IO5/11"
+    //% block="P5/11"
     J7,
-    //% block="IO8/12"
+    //% block="P8/12"
     J8
 }
 
 enum servo_ports {
-    //% block="IO1"
+    //% block="P1"
     J2,
-    //% block="IO2"
+    //% block="P2"
     J3,
-    //% block="IO16"
+    //% block="P16"
     J4
 }
 
@@ -88,7 +88,7 @@ enum CmpStr_dir {
  * Coolguy basic extension
  */
 //% weight=105 color=#ffc500 icon="\u272a"
-//% groups=['CmpStr', 'NixieTube', 'IRremote', 'UltrasoundWave', 'Motors', 'RGB','servo', others']
+//% groups=['CmpStr', 'NixieTube', 'IRremote', 'UltrasoundWave', 'Motors', 'RGB', 'servo', others']
 namespace Coolguy_basic {
     //----------------------字符串比较---------------------------------
     let Cmpstring = "";
@@ -804,7 +804,6 @@ namespace Coolguy_basic {
         }
         pins.servoWritePin(pin, val);
     }
-}
 
     /**
      * Button
@@ -849,3 +848,4 @@ namespace Coolguy_basic {
             return false;
         }
     }
+}

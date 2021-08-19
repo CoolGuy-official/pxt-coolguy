@@ -60,5 +60,6 @@
   "{id:group}NixieTube": "NixieTube",
   "{id:group}RGB": "RGB",
   "{id:group}UltrasoundWave": "UltrasoundWave",
+  "{id:group}servo":"servo",
   "{id:group}others": "others"
 }

@@ -505,7 +505,7 @@ namespace Coolguy_basic {
      * 红外遥控开启/关闭
      */
     //% blockId=coolguy_IR_setstate
-    //% block="%bversion|红外遥控 %status|"
+    //% block="主板%bversion|（版本）红外遥控 %status|"
     //% group=IRremote
     export function coolguy_IR_setstate(bversion:BoradType,status: IR_state) {
         state = status;

@@ -88,7 +88,7 @@ enum CmpStr_dir {
  * Coolguy basic extension
  */
 //% weight=105 color=#ffc500 icon="\u272a"
-//% groups=['CmpStr', 'NixieTube', 'IRremote', 'UltrasoundWave', 'Motors', 'RGB', others']
+//% groups=['CmpStr', 'NixieTube', 'IRremote', 'UltrasoundWave', 'Motors', 'RGB','servo', others']
 namespace Coolguy_basic {
     //----------------------字符串比较---------------------------------
     let Cmpstring = "";
@@ -657,50 +657,6 @@ namespace Coolguy_basic {
     }
 
     /**
-     * Button
-     * @param exterpin the ports component connect, eg: exter_ports.J1
-     */
-    //% blockId=coolguy_exter_button
-    //% block="Is button %pin|released?"
-    //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
-    //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
-    //% group=others
-    export function exter_button(exterpin: exter_ports): number {
-        let pin: DigitalPin;
-
-        switch (exterpin) {
-            case exter_ports.J1:
-                pin = DigitalPin.P0;
-                break;
-            case exter_ports.J2:
-                pin = DigitalPin.P1;
-                break;
-            case exter_ports.J3:
-                pin = DigitalPin.P2;
-                break;
-            case exter_ports.J4:
-                pin = DigitalPin.P16;
-                break;
-            case exter_ports.J5:
-                pin = DigitalPin.P13;
-                break;
-            case exter_ports.J6:
-                pin = DigitalPin.P15;
-                break;
-            default:
-                break;
-        }
-
-        if (!pins.digitalReadPin(pin)) {
-            while (!pins.digitalReadPin(pin));
-            return 1;
-        }
-        else {
-            return 0;
-        }
-    }
-
-    /**
      * Motor
      * @param exterpin the ports component connect, eg: motor_ports.J7
      * @param dir the turn of motor, eg: motor_dir.FWD
@@ -830,7 +786,7 @@ namespace Coolguy_basic {
     //% val.min=0 val.max=180
     //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=1
     //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
-    //% group=others
+    //% group=servo
     export function servo_control(exterpin: servo_ports, val: number) {
         let pin = AnalogPin.P1;
         switch (exterpin) {
@@ -849,3 +805,47 @@ namespace Coolguy_basic {
         pins.servoWritePin(pin, val);
     }
 }
+
+    /**
+     * Button
+     * @param exterpin the ports component connect, eg: exter_ports.J1
+     */
+    //% blockId=coolguy_exter_button
+    //% block="Is button %pin|released?"
+    //% exterpin.fieldEditor="gridpicker" exterpin.fieldOptions.columns=2
+    //% exterpin.fieldOptions.tooltips="false" exterpin.fieldOptions.width="150"
+    //% group=others
+    export function exter_button(exterpin: exter_ports): boolean {
+        let pin: DigitalPin;
+
+        switch (exterpin) {
+            case exter_ports.J1:
+                pin = DigitalPin.P0;
+                break;
+            case exter_ports.J2:
+                pin = DigitalPin.P1;
+                break;
+            case exter_ports.J3:
+                pin = DigitalPin.P2;
+                break;
+            case exter_ports.J4:
+                pin = DigitalPin.P16;
+                break;
+            case exter_ports.J5:
+                pin = DigitalPin.P13;
+                break;
+            case exter_ports.J6:
+                pin = DigitalPin.P15;
+                break;
+            default:
+                break;
+        }
+
+        if (!pins.digitalReadPin(pin)) {
+            while (!pins.digitalReadPin(pin));
+            return true;
+        }
+        else {
+            return false;
+        }
+    }

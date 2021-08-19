@@ -61,5 +61,6 @@
   "{id:group}NixieTube": "数码管",
   "{id:group}RGB": "RGB",
   "{id:group}UltrasoundWave": "超声波",
-  "{id:group}others": "舵机"
+  "{id:group}others": "其他",
+  "{id:group}servo":"舵机"
 }

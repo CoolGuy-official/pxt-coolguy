@@ -1,12 +1,12 @@
 {
     "name": "Coolguy_basic_extension",
-    "version": "0.3.10",
+    "version": "0.3.11",
     "description": "Coolguy basic extension",
     "license": "MIT",
     "dependencies": {
         "core": "*",
         "neopixel": "github:Microsoft/pxt-neopixel",
-        "Coolguy_advan_extension": "github:CoolGuy-official/Microbit-advan",
+        "Coolguy_advan_extension": "github:CoolGuy-official/Microbit-advan#v0.2.6",
         "MuVisionSensor": "github:CoolGuy-official/MuVisionSensor"
     },
     "files": [

@@ -345,7 +345,7 @@ namespace Coolguy_basic {
     let IRCode = 0;
     let IR_INpin = DigitalPin.P0;
 
-    function IR_Remote_Task(bversion:BoradType) {
+    function IR_Remote_Task(bversion:BoardType) {
         let t = control.millis();
         while (!pins.digitalReadPin(IR_INpin))            //等IR变为高电平，跳过9ms的前导低电平信号
         {
@@ -507,7 +507,7 @@ namespace Coolguy_basic {
     //% blockId=coolguy_IR_setstate
     //% block="主板%bversion|（版本）红外遥控 %status|"
     //% group=IRremote
-    export function coolguy_IR_setstate(bversion:BoradType,status: IR_state) {
+    export function coolguy_IR_setstate(bversion:BoardType,status: IR_state) {
         state = status;
         if (state) {
             control.inBackground(function () { while (state) { IR_Remote_Task(bversion) } });

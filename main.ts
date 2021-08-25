@@ -5,7 +5,7 @@ enum motor_dir {
     REV
 }
 
-enum BoradType{
+enum BoardType{
     //% block=V1
     V1=0,
     //% block=V2

@@ -10,8 +10,8 @@
         "MuVisionSensor": "github:CoolGuy-official/MuVisionSensor"
     },
     "files": [
-        "README.md",
         "main.ts",
+        "README.md",
         "buttons.ts",
         "buttons.cpp",
         "_locales/zh/Coolguy_basic_extension-strings.json",

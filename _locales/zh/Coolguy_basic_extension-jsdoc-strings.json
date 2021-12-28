@@ -1,5 +1,5 @@
 {
-  "Coolguy_basic": "自定义图形块",
+  "Coolguy_basic": "酷哥基础",
   "Coolguy_basic.CmpStr_Content_ToInt": "从指定内容前或后获取数字",
   "Coolguy_basic.CmpStr_Content_ToString": "从指定内容前或后获取字符",
   "Coolguy_basic.CmpStr_GetString": "获取比较内容",

@@ -27,7 +27,7 @@
   "Coolguy_basic.servo_control|block": "舵机初始化于%pin|，并旋转至%val|度",
   "Coolguy_basic.ultrasonic_Init|block": "超声波模块初始化于%exterpin|",
   "Coolguy_basic.ultrasonic_get|block": "超声波距离读取",
-  "Coolguy_basic|block": "Coolguy_basic",
+  "Coolguy_basic|block": "酷哥基础",
   "exter_ports.J1|block": "P0",
   "exter_ports.J2|block": "P1",
   "exter_ports.J3|block": "P2",
